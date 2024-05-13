@@ -4,16 +4,16 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class Cube : MonoBehaviour
 {
-    private bool _hitPlane;
+    private bool _isHitPlane;
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.TryGetComponent(out Plane plane) && collision.collider.TryGetComponent(out Releaser releaser))
+        if (!_isHitPlane)
         {
-            if (!_hitPlane)
+            if (collision.collider.TryGetComponent(out Plane plane) && collision.collider.TryGetComponent(out Releaser releaser))
             {
-                _hitPlane = true;
-                
+                _isHitPlane = true;
+
                 var renderer = GetComponent<Renderer>();
                 renderer.material.color = Random.ColorHSV();
 
@@ -28,7 +28,7 @@ public class Cube : MonoBehaviour
 
         yield return new WaitForSeconds(lifeTime);
 
-        _hitPlane = false;
+        _isHitPlane = false;
         releaser.Release(this);
     }
 }

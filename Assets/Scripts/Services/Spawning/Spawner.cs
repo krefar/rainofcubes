@@ -36,6 +36,11 @@ public class Spawner : MonoBehaviour
             );
     }
 
+    private void Start()
+    {
+        StartCoroutine(SpawnCubes());
+    }
+
     public void Release(Cube cube)
     {
         _pool.Release(cube);
@@ -53,11 +58,6 @@ public class Spawner : MonoBehaviour
 
             _spawnPoints.Add(new Vector3(x, y, z));
         }
-    }
-
-    private void Start()
-    {
-        StartCoroutine(SpawnCubes());
     }
 
     private IEnumerator SpawnCubes()
