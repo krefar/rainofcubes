@@ -30,7 +30,7 @@ public class Spawner : MonoBehaviour
 
                 return cube;
             },
-            actionOnGet: (cube) => ActionOnGet(cube),
+            actionOnGet: (cube) => InitCube(cube),
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
             actionOnDestroy: (cube) => Destroy(cube.gameObject)
             );
@@ -50,7 +50,7 @@ public class Spawner : MonoBehaviour
     {
         _spawnPoints = new List<Vector3>();
 
-        while (_spawnPointCount-- > 0)
+        for (var i = 0; i < _spawnPointCount; i++)
         {
             var x = Random.Range(_spawnPointMin, _spawnPointMax);
             var y = _spawnPointHeight;
@@ -62,7 +62,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnCubes()
     {
-        while(enabled)
+        while (enabled)
         {
             _pool.Get();
 
@@ -70,11 +70,9 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void ActionOnGet(Cube cube)
+    private void InitCube(Cube cube)
     {
-        cube.transform.position = GetRandomPosition();
-        cube.gameObject.SetActive(true);
-        cube.GetComponent<Renderer>().material.color = Color.white;
+        cube.Init(GetRandomPosition());
     }
 
     private Vector3 GetRandomPosition()
