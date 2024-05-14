@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    
     [SerializeField] private Cube _cubePrefab;
     [SerializeField] private float _repeatRate;
     [SerializeField] private int _spawnPointCount = 20;
