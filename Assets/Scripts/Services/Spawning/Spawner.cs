@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _repeatRate;
     [SerializeField] private int _spawnPointCount = 20;
 
-    private float _spawnPointHeight = 10.0f;
+    private float _spawnPointY = 10.0f;
     private float _spawnPointMax = 5.0f;
     private float _spawnPointMin = -5.0f;
     private List<Vector3> _spawnPoints;
@@ -22,17 +22,19 @@ public class Spawner : MonoBehaviour
         GenerateSpawnPoints();
 
         _pool = new ObjectPool<Cube>(
-            createFunc: () =>
-            {
-                var cube = Instantiate(_cubePrefab);
-                cube.transform.position = GetRandomPosition();
-
-                return cube;
-            },
+            createFunc: () => CreateCube(),
             actionOnGet: (cube) => InitCube(cube),
             actionOnRelease: (cube) => cube.gameObject.SetActive(false),
             actionOnDestroy: (cube) => Destroy(cube.gameObject)
             );
+    }
+
+    private Cube CreateCube()
+    {
+        var cube = Instantiate(_cubePrefab);
+        cube.transform.position = GetRandomPosition();
+
+        return cube;
     }
 
     private void Start()
@@ -51,21 +53,22 @@ public class Spawner : MonoBehaviour
 
         for (var i = 0; i < _spawnPointCount; i++)
         {
-            var x = Random.Range(_spawnPointMin, _spawnPointMax);
-            var y = _spawnPointHeight;
-            var z = Random.Range(_spawnPointMin, _spawnPointMax);
+            var spawnPointX = Random.Range(_spawnPointMin, _spawnPointMax);
+            var spawnPointZ = Random.Range(_spawnPointMin, _spawnPointMax);
 
-            _spawnPoints.Add(new Vector3(x, y, z));
+            _spawnPoints.Add(new Vector3(spawnPointX, _spawnPointY, spawnPointZ));
         }
     }
 
     private IEnumerator SpawnCubes()
     {
+        var wait = new WaitForSeconds(_repeatRate);
+
         while (enabled)
         {
             _pool.Get();
 
-            yield return new WaitForSeconds(_repeatRate);
+            yield return wait;
         }
     }
 

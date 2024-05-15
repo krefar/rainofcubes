@@ -16,7 +16,7 @@ public class Cube : MonoBehaviour
     {
         if (!_isHitPlane)
         {
-            if (collision.collider.TryGetComponent(out Plane plane) && collision.collider.TryGetComponent(out Releaser releaser))
+            if (collision.collider.TryGetComponent(out Releaser releaser))
             {
                 _isHitPlane = true;
 
