@@ -6,17 +6,19 @@ public class Cube : MonoBehaviour
 {
     private Renderer _renderer;
     private bool _isHitPlane;
+    private int _releaseAfterSeconds;
 
     private void Awake()
     {
-       _renderer = GetComponent<Renderer>();
+        _releaseAfterSeconds = Random.Range(2, 5);
+        _renderer = GetComponent<Renderer>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (!_isHitPlane)
         {
-            if (collision.collider.TryGetComponent(out Releaser releaser))
+            if (collision.collider.TryGetComponent(out CubesReleaser releaser))
             {
                 _isHitPlane = true;
 
@@ -29,18 +31,16 @@ public class Cube : MonoBehaviour
 
     public void Init(Vector3 position)
     {
+        _isHitPlane = false;
         transform.position = position;
         gameObject.SetActive(true);
         _renderer.material.color = Color.white;
     }
 
-    private IEnumerator ReleaseWithDelay(Releaser releaser)
+    private IEnumerator ReleaseWithDelay(CubesReleaser releaser)
     {
-        var lifeTime = Random.Range(2, 5);
+        yield return new WaitForSeconds(_releaseAfterSeconds);
 
-        yield return new WaitForSeconds(lifeTime);
-
-        _isHitPlane = false;
         releaser.Release(this);
     }
 }
